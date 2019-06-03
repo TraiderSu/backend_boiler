@@ -1,0 +1,8 @@
+{
+  "name": "backend_boiler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/TraiderSu/backend_boiler.git",
+  "author": "Albert Zamaldinov",
+  "license": "MIT"
+}
