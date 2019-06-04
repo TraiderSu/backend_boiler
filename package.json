@@ -9,17 +9,21 @@
     "dev": "env $(cat .env) nodemon --exec babel-node src/index.js"
   },
   "dependencies": {
-    "express": "4.17.1"
+    "config": "^3.1.0",
+    "express": "4.17.1",
+    "knex": "0.17.3",
+    "pg": "^7.11.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/node": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-syntax-export-namespace-from": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/runtime": "^7.4.5"
+    "@babel/cli": "7.4.4",
+    "@babel/core": "7.4.5",
+    "@babel/node": "7.4.5",
+    "@babel/plugin-proposal-class-properties": "7.4.4",
+    "@babel/plugin-syntax-dynamic-import": "7.2.0",
+    "@babel/plugin-syntax-export-namespace-from": "7.2.0",
+    "@babel/plugin-transform-runtime": "7.4.4",
+    "@babel/preset-env": "7.4.5",
+    "@babel/runtime": "7.4.5",
+    "prettier": "1.17.1"
   }
 }

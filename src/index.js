@@ -1,7 +1,22 @@
-import server from "./server";
+import config from 'config';
+import server from './server';
+import * as PostgresDB from './db';
 
-server.listen(process.env.PORT, () => {
-  console.log('Application server listening on port ' + process.env.PORT);
-});
+const port = config.get('server_port');
 
-export default server;
+Promise.resolve()
+  .then(async () => {
+    console.log('Migrating DB ...');
+    await PostgresDB.migrate();
+    console.log('Migration Done.');
+  })
+  .then(() => {
+    server.listen(port, err => {
+      if (err) throw err;
+      console.log(`🚀 Server listening on ${port}`);
+    });
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });

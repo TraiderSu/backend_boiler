@@ -1,0 +1,19 @@
+{
+  "server_host": "localhost",
+  "server_port": "8000",
+  "node_env": "development",
+  "db": {
+    "client": "postgres",
+    "connection": {
+      "host": "localhost",
+      "port": 5432,
+      "database": "backend_boiler_dev",
+      "username": "dev_user",
+      "password": "password"
+    }
+  },
+  "jwt": {
+    "secret": "jh489384fdh2332e8hfwjhs",
+    "expires_in": "8h"
+  }
+}
