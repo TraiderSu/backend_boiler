@@ -7,8 +7,7 @@ router
   .get('/posts', PostsController.getList)
   .post('/posts', PostsController.createItem)
   .get('/posts/:id', PostsController.getItem)
-  .put('/posts/:id', PostsController.updateItem)
-  .patch('/posts/:id', PostsController.patchItem)
+  .patch('/posts/:id', PostsController.updateItem)
   .delete('/posts/:id', PostsController.deleteItem);
 
 export default router;

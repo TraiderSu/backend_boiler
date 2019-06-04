@@ -1,46 +1,47 @@
-export const getList = (req, res, next) => {
+import * as postsDAL from './postsDAL';
+
+export const getList = async (req, res, next) => {
   try {
-    res.status(200).json({ ok: 'getList' });
+    const result = await postsDAL.getRecordList();
+
+    res.status(200).json({ result });
   } catch (err) {
     next(err);
   }
 };
 
-export const getItem = (req, res, next) => {
+export const getItem = async (req, res, next) => {
   try {
-    res.status(200).json({ ok: 'getItem' });
+    const result = await postsDAL.getRecord(req.params.id);
+
+    res.status(200).json({ result });
   } catch (err) {
     next(err);
   }
 };
 
-export const createItem = (req, res, next) => {
+export const createItem = async (req, res, next) => {
   try {
-    res.status(200).json({ ok: 'createItem' });
+    const result = await postsDAL.createRecord(req.body);
+    res.status(200).json({ result });
   } catch (err) {
     next(err);
   }
 };
 
-export const updateItem = (req, res, next) => {
+export const updateItem = async (req, res, next) => {
   try {
-    res.status(200).json({ ok: 'updateItem' });
+    const result = await postsDAL.updateRecord(req.params.id, req.body);
+    res.status(200).json({ result });
   } catch (err) {
     next(err);
   }
 };
 
-export const patchItem = (req, res, next) => {
+export const deleteItem = async (req, res, next) => {
   try {
-    res.status(200).json({ ok: 'patchItem' });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const deleteItem = (req, res, next) => {
-  try {
-    res.status(200).json({ ok: 'deleteItem' });
+    const result = await postsDAL.deleteRecord(req.params.id);
+    res.status(200).json({ result });
   } catch (err) {
     next(err);
   }

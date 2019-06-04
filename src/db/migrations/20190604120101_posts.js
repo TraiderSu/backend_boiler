@@ -3,9 +3,9 @@ exports.up = async knex => {
     CREATE EXTENSION IF NOT EXISTS pgcrypto;
     DROP TABLE IF EXISTS posts;
     CREATE TABLE posts (
-        id uuid DEFAULT gen_random_uuid (),
-        title VARCHAR(256) NOT NULL UNIQUE,
-        description VARCHAR(20000) NOT NULL UNIQUE,
+        id bigserial,
+        title VARCHAR(256) NOT NULL,
+        description VARCHAR(20000) NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         PRIMARY KEY (id)
