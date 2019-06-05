@@ -1,6 +1,7 @@
 {
   "server_host": "localhost",
   "server_port": "8000",
+  "app_root_dir": "/src",
   "node_env": "development",
   "db": {
     "client": "postgres",

@@ -1,4 +1,5 @@
 import * as postsDAL from './postsDAL';
+import { validate } from './Post';
 
 export const getList = async (req, res, next) => {
   try {
@@ -12,6 +13,13 @@ export const getList = async (req, res, next) => {
 
 export const getItem = async (req, res, next) => {
   try {
+    const validatedParams = await validate(req).catch(err => {
+      console.log('ошибка в функции валидации');
+      throw err;
+    });
+
+    console.log('validatedParams', validatedParams);
+
     const result = await postsDAL.getRecord(req.params.id);
 
     res.status(200).json({ result });
@@ -22,8 +30,9 @@ export const getItem = async (req, res, next) => {
 
 export const createItem = async (req, res, next) => {
   try {
-    const result = await postsDAL.createRecord(req.body);
-    res.status(200).json({ result });
+    validate(req);
+    // const result = await postsDAL.createRecord(req.body);
+    res.status(200).json({ result: '' });
   } catch (err) {
     next(err);
   }

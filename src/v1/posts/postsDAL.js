@@ -26,7 +26,7 @@ export const createRecord = async params => {
 
 export const updateRecord = async (id, params) => {
   const [updated] = await getSchema('posts')
-    .update(params)
+    .update({ ...params, updated_at: new Date() })
     .where({ id })
     .returning('*');
 
