@@ -9,7 +9,7 @@ const options = {
     },
     basePath: '/v1'
   },
-  apis: [__dirname + '/../v1/posts/postsAPI.js']
+  apis: [`${__dirname}/../v1/posts/postsSwagger.js`]
 };
 
 const specs = swaggerJsDoc(options);
