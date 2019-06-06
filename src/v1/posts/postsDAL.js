@@ -1,11 +1,25 @@
 import { getSchema } from '../../db';
 
-export const getRecordList = async (params = {}) => {
-  const result = await getSchema('posts')
-    .select()
-    .where(params);
+export const getRecordList = async ({ limit, offset }) => {
+  const getModel = () => getSchema('posts');
+  const total = await getModel()
+    .count()
+    .first();
 
-  return result;
+  const result = await getModel()
+    .limit(limit)
+    .offset(offset)
+    .select();
+
+  return {
+    result,
+    pagination: {
+      limit,
+      offset,
+      total: Number(total.count)
+    },
+    success: true
+  };
 };
 
 export const getRecord = async id => {

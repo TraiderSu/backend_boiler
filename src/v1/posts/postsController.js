@@ -3,9 +3,10 @@ import { validate } from './Post';
 
 export const getList = async (req, res, next) => {
   try {
-    const result = await postsDAL.getRecordList();
+    const { query } = await validate(req);
+    const result = await postsDAL.getRecordList(query);
 
-    res.status(200).json({ result });
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }

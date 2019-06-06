@@ -19,8 +19,14 @@ const Post = {
       .min(0)
   },
   query: {
-    limit: Joi.number().integer(),
-    offset: Joi.number().integer(),
+    limit: Joi.number()
+      .integer()
+      .min(0)
+      .default(10),
+    offset: Joi.number()
+      .integer()
+      .min(0)
+      .default(0),
     q: Joi.string()
   }
 };
