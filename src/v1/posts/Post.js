@@ -1,17 +1,22 @@
 import Joi from 'joi';
-import _isEmpty from 'lodash/isEmpty';
+
+const requiredOptionalToggler = {
+  is: Joi.boolean()
+    .valid(true)
+    .required(),
+  then: Joi.required(),
+  otherwise: Joi.optional()
+};
 
 const Post = {
-  method: Joi.string().valid('GET', 'POST', 'PUT', 'PATCH', 'DELETE'),
   body: {
-    id: Joi.number().integer(),
-    title: Joi.string(),
-    description: Joi.string(),
-    created_at: Joi.date().timestamp(),
-    updated_at: Joi.date().timestamp()
+    title: Joi.string().when('$isPostMethod', requiredOptionalToggler),
+    description: Joi.string().when('$isPostMethod', requiredOptionalToggler)
   },
   params: {
-    id: Joi.number().integer()
+    id: Joi.number()
+      .integer()
+      .min(0)
   },
   query: {
     limit: Joi.number().integer(),
@@ -21,8 +26,12 @@ const Post = {
 };
 
 export const validate = async ({ query, body, params, method }) => {
-  const result = await Joi.validate({ query, body, params, method }, Post, { abortEarly: false }).catch(err => {
-    console.log('Ошибка в промисе Joi');
+  const result = await Joi.validate({ query, body, params }, Post, {
+    context: { isPostMethod: method === 'POST' },
+    abortEarly: false,
+    stripUnknown: true
+  }).catch(err => {
+    console.log('Ошибка в промисе Joi, нужно обработать');
     throw err;
   });
 

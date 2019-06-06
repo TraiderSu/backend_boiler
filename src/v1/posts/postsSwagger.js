@@ -30,6 +30,21 @@
  *           type: array
  *           items:
  *             $ref: "#/definitions/Post"
+ *   post:
+ *     tags:
+ *       - Posts
+ *     summary: Create post
+ *     parameters:
+ *     - name: body
+ *       in: body
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Post"
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *           $ref: "#/definitions/Post"
  *
  * /posts/{id}:
  *   get:
@@ -38,13 +53,44 @@
  *     summary: Get post
  *     parameters:
  *     - name: id
- *       in: "path"
+ *       in: path
  *       required: true
  *     responses:
  *       200:
  *         description: OK
  *         schema:
  *           $ref: "#/definitions/Post"
+ *   patch:
+ *     tags:
+ *       - Posts
+ *     summary: Update post
+ *     parameters:
+ *     - name: id
+ *       in: path
+ *       required: true
+ *     - name: body
+ *       in: body
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Post"
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *           $ref: "#/definitions/Post"
  *
+ *   delete:
+ *     tags:
+ *       - Posts
+ *     summary: Delete post
+ *     parameters:
+ *     - name: id
+ *       in: path
+ *       required: true
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *           $ref: "#/definitions/Post"
  *
  */
