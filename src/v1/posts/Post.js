@@ -1,4 +1,6 @@
 import Joi from 'joi';
+import _get from 'lodash/get';
+import _isArray from 'lodash/isArray';
 
 const requiredOptionalToggler = {
   is: Joi.boolean()
@@ -7,6 +9,8 @@ const requiredOptionalToggler = {
   then: Joi.required(),
   otherwise: Joi.optional()
 };
+
+const orderByRegex = /^\d-(id|title|description)-(asc|desc)$/i;
 
 const Post = {
   body: {
@@ -27,6 +31,9 @@ const Post = {
       .integer()
       .min(0)
       .default(0),
+    order_by: Joi.alternatives()
+      .try(Joi.string().regex(orderByRegex), Joi.array().items(Joi.string().regex(orderByRegex)))
+      .default('1-id-asc'),
     q: Joi.string(),
     title: Joi.string(),
     description: Joi.string()
@@ -34,7 +41,7 @@ const Post = {
 };
 
 export const validate = async ({ query, body, params, method }) => {
-  const result = await Joi.validate({ query, body, params }, Post, {
+  let result = await Joi.validate({ query, body, params }, Post, {
     context: { isPostMethod: method === 'POST' },
     abortEarly: false,
     stripUnknown: true
@@ -42,6 +49,32 @@ export const validate = async ({ query, body, params, method }) => {
     console.log('Ошибка в промисе Joi, нужно обработать');
     throw err;
   });
+
+  if (result.query.hasOwnProperty('order_by')) {
+    let parsedOrderBy;
+    const rawOrderBy = _get(result, 'query.order_by');
+
+    const parseValue = item => {
+      const arr = item.split('-');
+      return [arr[1], arr[2].toUpperCase()];
+    };
+
+    if (_isArray(rawOrderBy)) {
+      parsedOrderBy = rawOrderBy
+        .sort((a, b) => {
+          const nameA = a.toLowerCase(),
+            nameB = b.toLowerCase();
+          if (nameA < nameB) return -1;
+          if (nameA > nameB) return 1;
+          return 0;
+        })
+        .map(item => parseValue(item));
+    } else {
+      parsedOrderBy = [parseValue(rawOrderBy)];
+    }
+
+    result = { ...result, query: { ...result.query, order_by: parsedOrderBy } };
+  }
 
   return result;
 };

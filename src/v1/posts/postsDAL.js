@@ -1,15 +1,16 @@
 import { getSchema } from '../../db';
 
-export const getRecordList = async ({ limit, offset, q, ...rest }) => {
+export const getRecordList = async ({ limit, offset, q, order_by = [], ...rest }) => {
   const total = await getSchema('posts')
     .count()
     .where(rest)
     .first();
 
   const result = await getSchema('posts')
+    .where(rest)
+    .modify(queryBuilder => order_by.forEach(item => queryBuilder.orderBy(item[0], item[1])))
     .limit(limit)
     .offset(offset)
-    .where(rest)
     .select();
 
   return {
