@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import _get from 'lodash/get';
 import _isArray from 'lodash/isArray';
+import { JoiValidationError } from '../../services/errorService';
 
 const requiredOptionalToggler = {
   is: Joi.boolean()
@@ -32,7 +33,12 @@ const Post = {
       .min(0)
       .default(0),
     order_by: Joi.alternatives()
-      .try(Joi.string().regex(orderByRegex), Joi.array().items(Joi.string().regex(orderByRegex)))
+      .try(
+        Joi.string().regex(orderByRegex),
+        Joi.array()
+          .items(Joi.string().regex(orderByRegex))
+          .error(() => ({ message: 'format error' }))
+      )
       .default('1-id-asc'),
     q: Joi.string(),
     title: Joi.string(),
@@ -44,10 +50,10 @@ export const validate = async ({ query, body, params, method }) => {
   let result = await Joi.validate({ query, body, params }, Post, {
     context: { isPostMethod: method === 'POST' },
     abortEarly: false,
-    stripUnknown: true
+    stripUnknown: true,
+    language: { string: { regex: { base: 'valid format is 1-id-asc' } } }
   }).catch(err => {
-    console.log('Ошибка в промисе Joi, нужно обработать');
-    throw err;
+    throw new JoiValidationError(err);
   });
 
   if (result.query.hasOwnProperty('order_by')) {

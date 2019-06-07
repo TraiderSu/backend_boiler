@@ -1,7 +1,7 @@
 import express from 'express';
 import config from 'config';
 import swaggerService from './services/swaggerService';
-import errorService from './services/errorsService';
+import { errorService } from './services/errorService';
 import postsAPI from './v1/posts/postsAPI';
 
 const dev = config.get('node_env') !== 'production';
