@@ -27,7 +27,9 @@ const Post = {
       .integer()
       .min(0)
       .default(0),
-    q: Joi.string()
+    q: Joi.string(),
+    title: Joi.string(),
+    description: Joi.string()
   }
 };
 

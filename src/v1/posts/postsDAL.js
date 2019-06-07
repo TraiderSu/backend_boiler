@@ -1,14 +1,15 @@
 import { getSchema } from '../../db';
 
-export const getRecordList = async ({ limit, offset }) => {
-  const getModel = () => getSchema('posts');
-  const total = await getModel()
+export const getRecordList = async ({ limit, offset, q, ...rest }) => {
+  const total = await getSchema('posts')
     .count()
+    .where(rest)
     .first();
 
-  const result = await getModel()
+  const result = await getSchema('posts')
     .limit(limit)
     .offset(offset)
+    .where(rest)
     .select();
 
   return {
