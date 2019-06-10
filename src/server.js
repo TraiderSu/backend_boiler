@@ -3,6 +3,7 @@ import config from 'config';
 import swaggerService from './services/swaggerService';
 import { errorService } from './services/errorService';
 import postsAPI from './v1/posts/postsAPI';
+import usersAPI from './v1/users/usersAPI';
 
 const dev = config.get('node_env') !== 'production';
 const server = express();
@@ -16,7 +17,7 @@ if (dev) {
   swaggerService(server);
 }
 
-server.use('/v1', [postsAPI]); // Routes
+server.use('/v1', [postsAPI, usersAPI]); // Routes
 
 server.get('*', () => {
   throw new Error('Page not found');
