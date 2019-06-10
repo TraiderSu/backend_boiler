@@ -1,4 +1,5 @@
 import { getSchema } from '../../db';
+import bcrypt from 'bcryptjs';
 
 export const getRecordList = async ({ limit, offset, q, order_by = [], ...rest }) => {
   const total = await getSchema('users')
@@ -24,18 +25,20 @@ export const getRecordList = async ({ limit, offset, q, order_by = [], ...rest }
   };
 };
 
-export const getRecord = async id => {
+export const getRecord = async params => {
   const [record] = await getSchema('users')
     .select()
-    .where({ id });
+    .where(params);
 
   return record;
 };
 
 export const createRecord = async params => {
+  params.password = await bcrypt.hash(params.password, 10);
+
   const [created] = await getSchema('users')
     .insert(params)
-    .returning('*');
+    .returning(['id', 'username', 'email']);
 
   return created;
 };
