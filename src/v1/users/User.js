@@ -1,15 +1,14 @@
 import Joi from 'joi';
 import _get from 'lodash/get';
 import _isArray from 'lodash/isArray';
-import { JoiValidationError } from '../../services/errorService';
+import { ValidationError } from '../../services/errorService';
 
 const orderByRegex = /^\d-(id|username|email)-(asc|desc)$/i;
 
-const Post = {
+const User = {
   body: {
     username: Joi.string(),
-    email: Joi.string(),
-    password: Joi.string()
+    email: Joi.string()
   },
   params: {
     id: Joi.number()
@@ -40,13 +39,13 @@ const Post = {
 };
 
 export const validate = async ({ query, body, params, method }) => {
-  let result = await Joi.validate({ query, body, params }, Post, {
+  let result = await Joi.validate({ query, body, params }, User, {
     context: { isPostMethod: method === 'POST' },
     abortEarly: false,
     stripUnknown: true,
     language: { string: { regex: { base: 'valid format is 1-id-asc' } } }
   }).catch(err => {
-    throw new JoiValidationError(err);
+    throw new ValidationError(err);
   });
 
   if (result.query.hasOwnProperty('order_by')) {

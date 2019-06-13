@@ -32,59 +32,12 @@
  *           type: array
  *           items:
  *             $ref: "#/definitions/User"
- *   post:
- *     tags:
- *       - Users
- *     summary: Create user
- *     parameters:
- *     - name: body
- *       in: body
- *       required: true
- *       schema:
- *         $ref: "#/definitions/User"
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *           $ref: "#/definitions/User"
  *
  * /users/{id}:
  *   get:
  *     tags:
  *       - Users
  *     summary: Get user
- *     parameters:
- *     - name: id
- *       in: path
- *       required: true
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *           $ref: "#/definitions/User"
- *   patch:
- *     tags:
- *       - Users
- *     summary: Update user
- *     parameters:
- *     - name: id
- *       in: path
- *       required: true
- *     - name: body
- *       in: body
- *       required: true
- *       schema:
- *         $ref: "#/definitions/User"
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *           $ref: "#/definitions/User"
- *
- *   delete:
- *     tags:
- *       - Users
- *     summary: Delete user
  *     parameters:
  *     - name: id
  *       in: path

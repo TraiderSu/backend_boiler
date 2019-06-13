@@ -9,13 +9,17 @@ const options = {
     },
     basePath: '/v1'
   },
-  apis: [`${__dirname}/../v1/posts/postsSwagger.js`, `${__dirname}/../v1/users/usersSwagger.js`]
+  apis: [
+    `${__dirname}/../v1/auth/authSwagger.js`,
+    `${__dirname}/../v1/posts/postsSwagger.js`,
+    `${__dirname}/../v1/users/usersSwagger.js`
+  ]
 };
 
 const specs = swaggerJsDoc(options);
 
 const swaggerService = server => {
-  server.use('/apidocs', swaggerUI.serve, swaggerUI.setup(specs));
+  server.use('/apidocs', swaggerUI.serve, swaggerUI.setup(specs, { explorer: true }));
 };
 
 export { swaggerService as default };

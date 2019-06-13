@@ -42,21 +42,3 @@ export const createRecord = async params => {
 
   return created;
 };
-
-export const updateRecord = async (id, params) => {
-  const [updated] = await getSchema('users')
-    .update({ ...params, updated_at: new Date() })
-    .where({ id })
-    .returning('*');
-
-  return updated;
-};
-
-export const deleteRecord = async id => {
-  const [deleted] = await getSchema('users')
-    .where({ id })
-    .del()
-    .returning('*');
-
-  return deleted;
-};

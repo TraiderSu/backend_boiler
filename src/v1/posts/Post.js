@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import _get from 'lodash/get';
 import _isArray from 'lodash/isArray';
-import { JoiValidationError } from '../../services/errorService';
+import { ValidationError } from '../../services/errorService';
 
 const requiredOptionalToggler = {
   is: Joi.boolean()
@@ -53,7 +53,7 @@ export const validate = async ({ query, body, params, method }) => {
     stripUnknown: true,
     language: { string: { regex: { base: 'valid format is 1-id-asc' } } }
   }).catch(err => {
-    throw new JoiValidationError(err);
+    throw new ValidationError(err);
   });
 
   if (result.query.hasOwnProperty('order_by')) {

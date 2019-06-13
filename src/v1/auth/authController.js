@@ -1,6 +1,8 @@
 import config from 'config';
+import { UnauthorizedError, ValidationError } from '../../services/errorService';
 import * as authService from './authService';
 import * as UsersDAL from '../users/UsersDAL';
+import { validate } from './Auth';
 
 const cookieOptions = {
   httpOnly: true,
@@ -10,10 +12,15 @@ const cookieOptions = {
 
 export const signup = async (req, res, next) => {
   try {
-    const newUser = await UsersDAL.createRecord(req.body);
-    const token = await authService.issueToken(newUser.id);
+    const {
+      body: { password_confirmation: _, ...rest }
+    } = await validate(req);
+    const newUser = await UsersDAL.createRecord(rest);
+
+    const token = await authService.issueToken(newUser);
     res.cookie('next_token', newUser, cookieOptions);
     res.status(200).json({ user: newUser, token });
+    res.status(200);
   } catch (err) {
     next(err);
   }
@@ -21,9 +28,13 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const user = await UsersDAL.getRecord({ email: req.body.email });
-    if (!user || !authService.checkPassword(req.body.password, user.password)) {
-      throw new InvalidError('Invalid email or password');
+    const {
+      body: { email, password }
+    } = await validate(req);
+
+    const user = await UsersDAL.getRecord({ email });
+    if (!user || !authService.checkPassword(password, user.password)) {
+      throw new ValidationError('Invalid email or password');
     }
 
     const token = await authService.issueToken(user.id);
