@@ -19,7 +19,7 @@ const options = {
 const specs = swaggerJsDoc(options);
 
 const swaggerService = server => {
-  server.use('/apidocs', swaggerUI.serve, swaggerUI.setup(specs, { explorer: true }));
+  server.use('/apidocs', swaggerUI.serve, swaggerUI.setup(specs));
 };
 
 export { swaggerService as default };

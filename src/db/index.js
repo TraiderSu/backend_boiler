@@ -18,7 +18,6 @@ const getMigrations = () => {
   return Knex(migrationConfig);
 };
 
-export const getConnection = () => connection;
 export const getSchema = schema => connection(schema);
 export const startTransaction = () =>
   new Promise((resolve, reject) => connection.transaction(trx => resolve(trx)).catch(reject));

@@ -6,7 +6,9 @@
   "author": "Albert Zamaldinov",
   "license": "MIT",
   "scripts": {
-    "dev": "env $(cat .env) nodemon --exec babel-node src/index.js"
+    "dev": "env $(cat .env) nodemon --exec babel-node src/index.js",
+    "create_migration": "knex migrate:make --migrations-directory ./src/db/migrations",
+    "migrate": "knex migrate:latest"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",

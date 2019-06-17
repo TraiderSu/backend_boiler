@@ -1,6 +1,5 @@
 exports.up = async knex => {
   await knex.raw(`
-    CREATE EXTENSION IF NOT EXISTS pgcrypto;
     DROP TABLE IF EXISTS posts;
     CREATE TABLE posts (
         id bigserial,
@@ -15,7 +14,6 @@ exports.up = async knex => {
 
 exports.down = async knex => {
   await knex.raw(`
-    DROP EXTENSION pgcrypto;
     DROP TABLE IF EXISTS posts;
   `);
 };
