@@ -12,7 +12,8 @@ const options = {
   apis: [
     `${__dirname}/../v1/auth/authSwagger.js`,
     `${__dirname}/../v1/posts/postsSwagger.js`,
-    `${__dirname}/../v1/users/usersSwagger.js`
+    `${__dirname}/../v1/users/usersSwagger.js`,
+    `${__dirname}/../v1/teams/teamsSwagger.js`
   ]
 };
 

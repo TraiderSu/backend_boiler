@@ -6,6 +6,7 @@ import { errorService } from './services/errorService';
 import authAPI from './v1/auth/authAPI';
 import postsAPI from './v1/posts/postsAPI';
 import usersAPI from './v1/users/usersAPI';
+import teamsAPI from './v1/teams/teamsAPI';
 
 const dev = config.get('node_env') !== 'production';
 const server = express();
@@ -19,7 +20,7 @@ if (dev) {
   swaggerService(server);
 }
 
-server.use('/v1', [authAPI, postsAPI, usersAPI]); // Routes
+server.use('/v1', [authAPI, postsAPI, teamsAPI, usersAPI]); // Routes
 
 server.get('*', () => {
   throw new Error('Page not found');

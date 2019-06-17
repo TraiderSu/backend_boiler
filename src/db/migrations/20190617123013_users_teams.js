@@ -8,8 +8,8 @@ exports.up = async knex => {
         created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (team_id) REFERENCES teams(id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
         UNIQUE (user_id, team_id)
         
     );
