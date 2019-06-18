@@ -1,6 +1,8 @@
 import swaggerUI from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
 
+const moduleNames = ['auth', 'users', 'posts', 'teams'];
+
 const options = {
   swaggerDefinition: {
     info: {
@@ -9,12 +11,7 @@ const options = {
     },
     basePath: '/v1'
   },
-  apis: [
-    `${__dirname}/../v1/auth/authSwagger.js`,
-    `${__dirname}/../v1/posts/postsSwagger.js`,
-    `${__dirname}/../v1/users/usersSwagger.js`,
-    `${__dirname}/../v1/teams/teamsSwagger.js`
-  ]
+  apis: moduleNames.map(name => `${__dirname}/../v1/${name}/${name}Swagger.yml`)
 };
 
 const specs = swaggerJsDoc(options);
