@@ -2,7 +2,7 @@ exports.up = async knex => {
   await knex.raw(`
     DROP TABLE IF EXISTS users;
     CREATE TABLE users (
-        id bigserial,
+        id BIGSERIAL,
         email VARCHAR(256) NOT NULL,
         username VARCHAR(256) NOT NULL,
         password CHAR(64) NOT NULL,

@@ -46,7 +46,7 @@ definitions:
  post:
    tags:
      - Auth
-   summary: Signup
+   summary: Login
    parameters:
    - name: body
      in: body

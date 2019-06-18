@@ -2,9 +2,9 @@ exports.up = async knex => {
   await knex.raw(`
     DROP TABLE IF EXISTS users_teams;
     CREATE TABLE users_teams (
-        id bigserial,
-        user_id bigserial, 
-        team_id bigserial,
+        id BIGSERIAL,
+        user_id BIGSERIAL, 
+        team_id BIGSERIAL,
         created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         PRIMARY KEY (id),
