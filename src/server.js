@@ -2,7 +2,7 @@ import express from 'express';
 import config from 'config';
 import cookieParser from 'cookie-parser';
 import swaggerService from './services/swaggerService';
-import { errorService } from './services/errorService';
+import { errorService, NotFoundError } from './services/errorService';
 import authAPI from './v1/auth/authAPI';
 import postsAPI from './v1/posts/postsAPI';
 import usersAPI from './v1/users/usersAPI';
@@ -23,7 +23,7 @@ if (dev) {
 server.use('/v1', [authAPI, postsAPI, teamsAPI, usersAPI]); // Routes
 
 server.get('*', () => {
-  throw new Error('Page not found');
+  throw new NotFoundError();
 });
 
 server.use(errorService);

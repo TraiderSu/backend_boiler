@@ -4,7 +4,7 @@ import config from 'config';
 
 export const checkPassword = (inputPassword, dbPassword) => bcrypt.compare(inputPassword, dbPassword);
 
-export const issueToken = ({ id }) =>
+export const issueToken = id =>
   jwt.sign({ id }, config.get('jwt.secret'), {
     expiresIn: config.get('jwt.expires_in')
   });

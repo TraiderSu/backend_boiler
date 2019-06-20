@@ -1,17 +1,9 @@
 import Joi from 'joi';
 import { ValidationError } from '../../services/errorService';
 
-const requiredOptionalToggler = {
-  is: Joi.boolean()
-    .valid(true)
-    .required(),
-  then: Joi.required(),
-  otherwise: Joi.optional()
-};
-
-const Auth = {
+const AuthSignup = {
   body: {
-    username: Joi.string().when('$isSignup', requiredOptionalToggler),
+    username: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string()
       .min(8)
@@ -19,20 +11,29 @@ const Auth = {
       .required(),
     password_confirmation: Joi.string()
       .valid(Joi.ref('password'))
-      .when('$isSignup', requiredOptionalToggler)
       .options({ language: { any: { allowOnly: 'must match password' } } })
+      .required()
   },
-  params: {
-    id: Joi.number()
-      .integer()
-      .min(0)
+  params: {},
+  query: {}
+};
+
+const AuthLogin = {
+  body: {
+    username: Joi.string().required(),
+    password: Joi.string()
+      .min(8)
+      .max(16)
+      .required()
   },
+  params: {},
   query: {}
 };
 
 export const validate = async ({ query, body, params, url }) => {
-  let result = await Joi.validate({ query, body, params }, Auth, {
-    context: { $isSignup: url === '/login' },
+  const validationSchema = url => (url === '/login' ? AuthLogin : AuthSignup);
+
+  let result = await Joi.validate({ query, body, params }, validationSchema(url), {
     abortEarly: false,
     stripUnknown: true
   }).catch(err => {

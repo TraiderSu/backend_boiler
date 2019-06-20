@@ -12,7 +12,7 @@ export const getRecordList = async ({ limit, offset, q, order_by = [], ...rest }
     .modify(queryBuilder => order_by.forEach(item => queryBuilder.orderBy(item[0], item[1])))
     .limit(limit)
     .offset(offset)
-    .select();
+    .select(['id', 'username', 'email', 'created_at', 'updated_at']);
 
   return {
     result,

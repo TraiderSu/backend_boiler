@@ -31,4 +31,24 @@ class UnauthorizedError extends AppError {
   }
 }
 
-export { errorService, AppError, ValidationError, UnauthorizedError };
+class ForbiddenError extends AppError {
+  constructor(err) {
+    super(err);
+    this.status = 403;
+    this.name = 'ForbiddenError';
+    this.isOperational = true;
+    this.message = 'Permission denied';
+  }
+}
+
+class NotFoundError extends AppError {
+  constructor(err) {
+    super(err);
+    this.status = 404;
+    this.name = 'NotFoundError';
+    this.isOperational = true;
+    this.message = 'Not found';
+  }
+}
+
+export { errorService, AppError, ValidationError, UnauthorizedError, ForbiddenError, NotFoundError };

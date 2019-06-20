@@ -3,8 +3,8 @@ exports.up = async knex => {
     DROP TABLE IF EXISTS users;
     CREATE TABLE users (
         id BIGSERIAL,
-        email VARCHAR(256) NOT NULL,
-        username VARCHAR(256) NOT NULL,
+        email VARCHAR(256) NOT NULL UNIQUE,
+        username VARCHAR(256) NOT NULL UNIQUE,
         password CHAR(64) NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
         updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
