@@ -1,13 +1,13 @@
 import { getSchema } from '../../db';
 
 export const getRecordList = async ({ limit, offset, q, order_by = [], ...rest }) => {
-  const total = await getSchema('teams')
+  const baseQuery = () => getSchema('teams').where(rest);
+
+  const total = await baseQuery()
     .count()
-    .where(rest)
     .first();
 
-  const result = await getSchema('teams')
-    .where(rest)
+  const result = await baseQuery()
     .modify(queryBuilder => order_by.forEach(item => queryBuilder.orderBy(item[0], item[1])))
     .limit(limit)
     .offset(offset)
@@ -56,4 +56,35 @@ export const deleteRecord = async id => {
     .returning('*');
 
   return deleted;
+};
+
+export const getTeamUserList = async (team_id, { limit, offset, q, order_by = [], ...rest }) => {
+  const baseQuery = () =>
+    getSchema('users_teams')
+      .innerJoin('users', 'users_teams.user_id', 'users.id')
+      .where(rest);
+
+  const total = await baseQuery()
+    .count()
+    .first();
+
+  const result = await baseQuery()
+    .modify(queryBuilder => order_by.forEach(item => queryBuilder.orderBy(item[0], item[1])))
+    .limit(limit)
+    .offset(offset)
+    .select(['users.id', 'users.username', 'users.email', 'users.created_at', 'users.updated_at']);
+
+  return {
+    result,
+    pagination: {
+      limit,
+      offset,
+      total: Number(total.count)
+    },
+    success: true
+  };
+};
+
+export const updateTeamUserList = async team_id => {
+  // TODO: Написать запрос в базу
 };

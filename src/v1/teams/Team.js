@@ -3,51 +3,95 @@ import _get from 'lodash/get';
 import _isArray from 'lodash/isArray';
 import { ValidationError } from '../../services/errorService';
 
-const requiredOptionalToggler = {
-  is: Joi.boolean()
-    .valid(true)
-    .required(),
-  then: Joi.required(),
-  otherwise: Joi.optional()
-};
-
 const orderByRegex = /^\d-(id|title|description)-(asc|desc)$/i;
+const usersOrderByRegex = /^\d-(id|username|email)-(asc|desc)$/i;
 
-const Post = {
-  body: {
-    title: Joi.string().when('$isPostMethod', requiredOptionalToggler),
-    description: Joi.string().when('$isPostMethod', requiredOptionalToggler)
+export const Team = {
+  get: {
+    params: {
+      id: Joi.number()
+        .integer()
+        .min(0)
+    },
+    query: {
+      limit: Joi.number()
+        .integer()
+        .min(0)
+        .default(10),
+      offset: Joi.number()
+        .integer()
+        .min(0)
+        .default(0),
+      order_by: Joi.alternatives()
+        .try(
+          Joi.string().regex(orderByRegex),
+          Joi.array()
+            .items(Joi.string().regex(orderByRegex))
+            .error(() => ({ message: 'format error' }))
+        )
+        .default('1-id-asc'),
+      q: Joi.string(),
+      title: Joi.string(),
+      description: Joi.string()
+    }
   },
-  params: {
-    id: Joi.number()
-      .integer()
-      .min(0)
+  create: {
+    body: {
+      title: Joi.string().required(),
+      description: Joi.string().required()
+    }
   },
-  query: {
-    limit: Joi.number()
-      .integer()
-      .min(0)
-      .default(10),
-    offset: Joi.number()
-      .integer()
-      .min(0)
-      .default(0),
-    order_by: Joi.alternatives()
-      .try(
-        Joi.string().regex(orderByRegex),
-        Joi.array()
-          .items(Joi.string().regex(orderByRegex))
-          .error(() => ({ message: 'format error' }))
-      )
-      .default('1-id-asc'),
-    q: Joi.string(),
-    title: Joi.string(),
-    description: Joi.string()
+  update: {
+    body: {
+      title: Joi.string(),
+      description: Joi.string()
+    }
+  },
+  getUserList: {
+    params: {
+      id: Joi.number()
+        .integer()
+        .min(0)
+    },
+    query: {
+      limit: Joi.number()
+        .integer()
+        .min(0)
+        .default(10),
+      offset: Joi.number()
+        .integer()
+        .min(0)
+        .default(0),
+      order_by: Joi.alternatives()
+        .try(
+          Joi.string().regex(usersOrderByRegex),
+          Joi.array()
+            .items(Joi.string().regex(usersOrderByRegex))
+            .error(() => ({ message: 'format error' }))
+        )
+        .default('1-id-asc'),
+      q: Joi.string(),
+      user_id: Joi.number()
+        .integer()
+        .min(0)
+    }
+  },
+  updateUserList: {
+    body: {
+      user_id: Joi.number()
+        .integer()
+        .min(0)
+    },
+    params: {
+      id: Joi.number()
+        .integer()
+        .min(0)
+    }
   }
 };
 
-export const validate = async ({ query, body, params, method }) => {
-  let result = await Joi.validate({ query, body, params }, Post, {
+export const validate = async ({ query, body, params, method }, schema) => {
+  let result = await Joi.validate({ query, body, params }, schema, {
     context: { isPostMethod: method === 'POST' },
     abortEarly: false,
     stripUnknown: true,
