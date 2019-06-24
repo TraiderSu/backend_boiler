@@ -1,4 +1,5 @@
-import { getSchema } from '../../db';
+import { getSchema, startTransaction } from '../../db';
+import { AppError } from '../../services/errorService';
 
 export const getRecordList = async ({ limit, offset, q, order_by = [], ...rest }) => {
   const baseQuery = () => getSchema('teams').where(rest);
@@ -85,6 +86,31 @@ export const getTeamUserList = async (team_id, { limit, offset, q, order_by = []
   };
 };
 
-export const updateTeamUserList = async team_id => {
-  // TODO: Написать запрос в базу
+export const updateTeamUserList = async (team_id, { user_ids }) => {
+  const trx = await startTransaction();
+  const operations = [];
+
+  user_ids.forEach(user_id => {
+    operations.push(trx('users_teams').insert({ team_id, user_id }));
+  });
+
+  return Promise.all(operations)
+    .then(async () => {
+      await trx.commit();
+
+      const result = await getSchema('users_teams')
+        .innerJoin('users', 'users_teams.user_id', 'users.id')
+        .whereIn('user_id', user_ids)
+        .andWhere({ team_id })
+        .select(['users.id', 'users.username', 'users.email', 'users.created_at', 'users.updated_at']);
+
+      return {
+        result,
+        success: true
+      };
+    })
+    .catch(err => {
+      console.log('err', err);
+      throw new AppError();
+    });
 };

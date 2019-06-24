@@ -78,9 +78,14 @@ export const Team = {
   },
   updateUserList: {
     body: {
-      user_id: Joi.number()
-        .integer()
-        .min(0)
+      user_ids: Joi.array()
+        .items(
+          Joi.number()
+            .integer()
+            .min(0)
+        )
+        .unique()
+        .required()
     },
     params: {
       id: Joi.number()
@@ -100,7 +105,7 @@ export const validate = async ({ query, body, params, method }, schema) => {
     throw new ValidationError(err);
   });
 
-  if (result.query.hasOwnProperty('order_by')) {
+  if (result.query && result.query.hasOwnProperty('order_by')) {
     let parsedOrderBy;
     const rawOrderBy = _get(result, 'query.order_by');
 
