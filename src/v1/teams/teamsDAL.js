@@ -62,7 +62,7 @@ export const getTeamUserList = async (team_id, { limit, offset, q, order_by = []
   const baseQuery = () =>
     getSchema('users_teams')
       .innerJoin('users', 'users_teams.user_id', 'users.id')
-      .where(rest);
+      .where({ team_id, ...rest });
 
   const total = await baseQuery()
     .count()
