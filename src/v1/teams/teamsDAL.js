@@ -109,8 +109,7 @@ export const updateTeamUserList = async (team_id, { user_ids }) => {
         success: true
       };
     })
-    .catch(err => {
-      console.log('err', err);
+    .catch(() => {
       throw new AppError();
     });
 };
