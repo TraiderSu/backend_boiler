@@ -1,4 +1,5 @@
 import * as teamsDAL from './teamsDAL';
+import { startTransaction } from '../../db';
 import { validate, Team } from './Team';
 
 export const getList = async (req, res, next) => {
@@ -67,13 +68,16 @@ export const getTeamUserList = async (req, res, next) => {
   }
 };
 
-export const updateTeamUserList = async (req, res, next) => {
-  try {
-    const { params, body } = await validate(req, Team.updateUserList);
-    const result = await teamsDAL.updateTeamUserList(params.id, body);
-
-    res.status(200).json({ result });
-  } catch (err) {
-    next(err);
-  }
-};
+// export const updateTeamUserList = async (req, res, next) => {
+//   const trx = await startTransaction();
+//
+//   try {
+//     const { params, body } = await validate(req, Team.updateUserList);
+//     const result = await teamsDAL.updateTeamUserList(trx, params.id, body);
+//
+//     res.status(200).json({ result });
+//   } catch (err) {
+//     await trx.rollback();
+//     next(err);
+//   }
+// };

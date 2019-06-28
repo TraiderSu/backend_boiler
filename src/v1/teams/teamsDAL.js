@@ -33,21 +33,66 @@ export const getRecord = async id => {
   return record;
 };
 
-export const createRecord = async params => {
-  const [created] = await getSchema('teams')
-    .insert(params)
-    .returning('*');
+export const createRecord = async ({ user_ids, ...params }) => {
+  const trx = await startTransaction();
 
-  return created;
+  try {
+    const [created] = await trx('teams')
+      .insert(params)
+      .returning('*');
+
+    await updateTeamUserList(trx, created.id, user_ids);
+
+    await trx.commit();
+
+    const users = await getSchema('users_teams')
+      .innerJoin('users', 'users_teams.user_id', 'users.id')
+      .whereIn('user_id', user_ids)
+      .andWhere({ team_id: created.id })
+      .select(['users.id', 'users.username', 'users.email', 'users.created_at', 'users.updated_at']);
+
+    return {
+      result: {
+        ...created,
+        users
+      },
+      success: true
+    };
+  } catch (err) {
+    await trx.rollback();
+    throw new AppError();
+  }
 };
 
-export const updateRecord = async (id, params) => {
-  const [updated] = await getSchema('teams')
-    .update({ ...params, updated_at: new Date() })
-    .where({ id })
-    .returning('*');
+export const updateRecord = async (id, { user_ids, ...params }) => {
+  const trx = await startTransaction();
 
-  return updated;
+  try {
+    const [updated] = await trx('teams')
+      .update({ ...params, updated_at: new Date() })
+      .where({ id })
+      .returning('*');
+
+    await updateTeamUserList(trx, updated.id, user_ids);
+
+    await trx.commit();
+
+    const users = await getSchema('users_teams')
+      .innerJoin('users', 'users_teams.user_id', 'users.id')
+      .where({ team_id: updated.id })
+      .select(['users.id', 'users.username', 'users.email', 'users.created_at', 'users.updated_at']);
+
+    return {
+      result: {
+        ...updated,
+        users
+      },
+      success: true
+    };
+  } catch (err) {
+    await trx.rollback();
+    throw new AppError();
+  }
 };
 
 export const deleteRecord = async id => {
@@ -86,30 +131,14 @@ export const getTeamUserList = async (team_id, { limit, offset, q, order_by = []
   };
 };
 
-export const updateTeamUserList = async (team_id, { user_ids }) => {
-  const trx = await startTransaction();
+export const updateTeamUserList = async (trx, team_id, user_ids) => {
   const operations = [];
 
   user_ids.forEach(user_id => {
     operations.push(trx('users_teams').insert({ team_id, user_id }));
   });
 
-  return Promise.all(operations)
-    .then(async () => {
-      await trx.commit();
-
-      const result = await getSchema('users_teams')
-        .innerJoin('users', 'users_teams.user_id', 'users.id')
-        .whereIn('user_id', user_ids)
-        .andWhere({ team_id })
-        .select(['users.id', 'users.username', 'users.email', 'users.created_at', 'users.updated_at']);
-
-      return {
-        result,
-        success: true
-      };
-    })
-    .catch(() => {
-      throw new AppError();
-    });
+  return Promise.all(operations).catch(() => {
+    throw new AppError();
+  });
 };

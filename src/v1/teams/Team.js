@@ -36,15 +36,39 @@ export const Team = {
     }
   },
   create: {
+    params: {
+      id: Joi.number()
+        .integer()
+        .min(0)
+    },
     body: {
       title: Joi.string().required(),
-      description: Joi.string().required()
+      description: Joi.string().required(),
+      user_ids: Joi.array()
+        .items(
+          Joi.number()
+            .integer()
+            .min(0)
+        )
+        .unique()
     }
   },
   update: {
+    params: {
+      id: Joi.number()
+        .integer()
+        .min(0)
+    },
     body: {
       title: Joi.string(),
-      description: Joi.string()
+      description: Joi.string(),
+      user_ids: Joi.array()
+        .items(
+          Joi.number()
+            .integer()
+            .min(0)
+        )
+        .unique()
     }
   },
   getUserList: {
@@ -72,23 +96,6 @@ export const Team = {
         .default('1-id-asc'),
       q: Joi.string(),
       user_id: Joi.number()
-        .integer()
-        .min(0)
-    }
-  },
-  updateUserList: {
-    body: {
-      user_ids: Joi.array()
-        .items(
-          Joi.number()
-            .integer()
-            .min(0)
-        )
-        .unique()
-        .required()
-    },
-    params: {
-      id: Joi.number()
         .integer()
         .min(0)
     }
